@@ -16,6 +16,7 @@ export class RegisterDto {
     password: string;
 
     @IsString()
+
     image: string;
 
     @IsString()
