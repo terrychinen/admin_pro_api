@@ -8,16 +8,30 @@ import { AuthRepository } from '../repositories/auth.repository';
 import { User } from '../entities/user.entity';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { IAuthResponse } from '../interfaces/auth-response.interface';
+import { JwtService } from '@nestjs/jwt';
+import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(AuthRepository)
     private readonly authRepository: AuthRepository,
-  ) {}
+    private readonly jwtService: JwtService
+  ) { }
 
-  login(loginDto: LoginDto): Promise<User> {
-    return this.authRepository.login(loginDto);
+  async login(loginDto: LoginDto): Promise<IAuthResponse> {
+    const isAuth = await this.authRepository.login(loginDto);
+    if (isAuth) {
+      const payload: IJwtPayload = { email: loginDto.email };
+      const accessToken: string = this.jwtService.sign(payload);
+
+      const authResponse: IAuthResponse = {
+        token: accessToken
+      };
+
+      return authResponse;
+    }
   }
 
   async createUser(registerDto: RegisterDto): Promise<User> {
