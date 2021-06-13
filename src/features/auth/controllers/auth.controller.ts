@@ -3,13 +3,14 @@ import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
 import { User } from '../entities/user.entity';
+import { IAuthResponse } from '../interfaces/auth-response.interface';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('/login')
-  login(@Body() loginDto: LoginDto): Promise<User> {
+  login(@Body() loginDto: LoginDto): Promise<IAuthResponse> {
     return this.authService.login(loginDto);
   }
 
