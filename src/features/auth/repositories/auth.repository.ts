@@ -3,15 +3,15 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../entities/user.entity';
 import { RegisterDto } from '../dtos/register.dto';
 import { LoginDto } from '../dtos/login.dto';
+import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 import {
-  ConflictException,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 
 @EntityRepository(User)
 export class AuthRepository extends Repository<User> {
-  async login(loginDto: LoginDto): Promise<User> {
+  async login(loginDto: LoginDto): Promise<boolean> {
     const { email, password } = loginDto;
 
     const user: User = await this.findOne({ email }).catch((err) => {
@@ -19,7 +19,7 @@ export class AuthRepository extends Repository<User> {
     });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+      return true;
     }
 
     throw new UnauthorizedException('email or password does not exists');
