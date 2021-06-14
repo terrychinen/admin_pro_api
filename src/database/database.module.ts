@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.${process.env.NODE_ENV}`],
+      isGlobal: true
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -17,8 +18,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        autoLoadEntities: configService.get('DB_'),
-        synchronize: configService.get('DB_AUTO_LOAD_ENTITY'),
+        autoLoadEntities: true,
+        synchronize: configService.get('DB_SYNCHRONIZE'),
         entities: [configService.get('DB_ENTITIES')],
         migrations: [configService.get('DB_MIGRATIONS')],
       }),
