@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthRepository } from '../repositories/auth.repository';
@@ -11,6 +12,7 @@ import { RegisterDto } from '../dtos/register.dto';
 import { IAuthResponse } from '../interfaces/auth-response.interface';
 import { JwtService } from '@nestjs/jwt';
 import { IJwtPayload } from '../interfaces/jwt-payload.interface';
+import { UpdateTokenDto } from '../dtos/update-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,12 +23,13 @@ export class AuthService {
   ) { }
 
   async login(loginDto: LoginDto): Promise<IAuthResponse> {
-    const isAuth = await this.authRepository.login(loginDto);
-    if (isAuth) {
-      const payload: IJwtPayload = { email: loginDto.email };
+    const user: User = await this.authRepository.login(loginDto);
+    if (user) {
+      const payload: IJwtPayload = { email: user.email };
       const accessToken: string = this.jwtService.sign(payload);
 
       const authResponse: IAuthResponse = {
+        user,
         token: accessToken
       };
 
@@ -47,5 +50,31 @@ export class AuthService {
     }
 
     return this.authRepository.createUser(registerDto);
+  }
+
+  async refreshToken(updateTokenDto: UpdateTokenDto): Promise<IAuthResponse> {
+    const { token } = updateTokenDto;
+
+    try {
+      const decodeToken = this.jwtService.decode(token);
+      const email = decodeToken['email'];
+      
+      const user: User = await this.authRepository.findOne({ email });
+      delete user.password;
+
+      const payload: IJwtPayload = {
+        email: user.email
+      }
+
+      const accessToken: string = this.jwtService.sign(payload);
+      const authResponse: IAuthResponse = {
+        user,
+        token: accessToken
+      };
+
+      return authResponse;
+    } catch (err) {
+      throw new UnauthorizedException('Token invalid');
+    }
   }
 }
