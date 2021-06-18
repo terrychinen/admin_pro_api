@@ -8,7 +8,4 @@ export class CreateHospitalDto {
 
     @IsEmpty()
     image: string;
-
-    @IsNotEmpty()
-    userID: string;
 }
