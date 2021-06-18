@@ -1,4 +1,7 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Entity, Column, JoinColumn,
+    PrimaryGeneratedColumn, ManyToOne
+} from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
 
 @Entity()
@@ -12,7 +15,10 @@ export class Hospital {
     @Column({ type: 'varchar', nullable: true })
     image: string;
 
-    @OneToOne(() => User)
-    @JoinColumn()
+    @Column({ name: 'user_id' })
+    userId: number;
+
+    @ManyToOne(() => User, user => user.hospitals, { nullable: false })
+    @JoinColumn({ name: 'user_id' })
     user: User;
 }
