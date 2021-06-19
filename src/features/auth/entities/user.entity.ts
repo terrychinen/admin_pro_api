@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Hospital } from '../../hospital/entities/hospital.entity';
 
 @Entity()
 export class User {
@@ -22,4 +23,8 @@ export class User {
 
   @Column({ type: 'boolean', default: false })
   google: string;
+
+  @OneToMany(() => Hospital, hospital => hospital.user)
+  @JoinColumn()
+  hospitals: Hospital[];
 }
