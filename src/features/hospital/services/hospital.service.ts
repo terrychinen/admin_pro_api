@@ -6,7 +6,7 @@ import { User } from '../../auth/entities/user.entity';
 import { Hospital } from '../entities/hospital.entity';
 import { PaginationDto } from '../../../global/dtos/pagination.dto';
 import { UpdateHospitalDto } from '../dtos/update-hospital.dto';
-import { IDeleteResult } from '../interfaces/delete-result.inteface';
+import { IDeleteResult } from '../../../global/interfaces/delete-result.inteface';
 
 @Injectable()
 export class HospitalService {

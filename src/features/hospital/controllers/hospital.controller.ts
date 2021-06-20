@@ -11,7 +11,7 @@ import { AuthJwt } from '../../auth/decorators/jwt-auth.decorator';
 import { PaginationDto } from '../../../global/dtos/pagination.dto';
 import { UpdateHospitalDto } from '../dtos/update-hospital.dto';
 import { Hospital } from '../entities/hospital.entity';
-import { IDeleteResult } from '../interfaces/delete-result.inteface';
+import { IDeleteResult } from '../../../global/interfaces/delete-result.inteface';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('hospital')

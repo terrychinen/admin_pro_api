@@ -17,8 +17,6 @@ export class HospitalRepository extends Repository<Hospital> {
             user
         });
 
-        delete hospital.user.password;
-
         return await this.save(hospital).catch((err) => {
             if(err.code === '23505') {
                 throw new ConflictException(`${hospital.name} is already exists`);

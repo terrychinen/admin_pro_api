@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Hospital } from '../../hospital/entities/hospital.entity';
+import { Doctor } from '../../doctor/entities/doctor.entity';
 
 @Entity()
 export class User {
@@ -27,4 +28,8 @@ export class User {
   @OneToMany(() => Hospital, hospital => hospital.user)
   @JoinColumn()
   hospitals: Hospital[];
+
+  @OneToMany(() => Doctor, doctor => doctor.user)
+  @JoinColumn()
+  doctors: Doctor[];
 }

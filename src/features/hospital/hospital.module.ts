@@ -8,6 +8,9 @@ import { HospitalRepository } from './repositories/hospital.repository';
   imports: [
     TypeOrmModule.forFeature([HospitalRepository]),
   ],
+  exports: [
+    HospitalService
+  ],
   controllers: [    
     HospitalController
   ],
